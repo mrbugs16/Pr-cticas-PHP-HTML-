@@ -8,6 +8,24 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Validación de datos
+if (!isset($_POST['nombre']) || !preg_match(pattern: "/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+)$/",
+                                 subject: $_POST['nombre'])){
+                            echo "El nombre no es valido. Solo se permiten letras y espacios.";
+                            exit();
+                                 }
+
+if (!isset($_POST["correo"]) || !filter_var(value: $_POST["correo"], filter: FILTER_VALIDATE_EMAIL)) {
+    echo "El correo no es válido.";
+    exit();
+}
+
+//validacion de contraseña, poner por lo menos 8 caracteres, una mayuscula, una minuscula, un numero y un caracter especial
+
+
+
+
+
+
 $nombre     = trim($_POST['nombre']   ?? '');
 $email      = trim($_POST['email']    ?? '');
 $usuario    = trim($_POST['usuario']  ?? '');

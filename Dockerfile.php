@@ -1,5 +1,5 @@
-# Start from the official PHP 8.2 FPM image
-FROM php:8.5.2-fpm
+# Start from the official PHP 8.4 FPM image
+FROM php:8.4-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -10,7 +10,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Configure and install PHP extensions
-RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+# ✅ Detectar arquitectura dinámicamente en lugar de hardcodear x86_64
+RUN ARCH=$(dpkg-architecture -q DEB_HOST_MULTIARCH) \
+    && docker-php-ext-configure ldap --with-libdir=lib/${ARCH}/ \
     && docker-php-ext-install -j$(nproc) ldap \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \

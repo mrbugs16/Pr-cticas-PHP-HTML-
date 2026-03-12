@@ -15,7 +15,7 @@
         <?php
         $consulta = $cnx->query("SELECT nombre, email, usuario FROM usuarios");
 
-        // fetchAll regresa TODO el resultado como arreglo asociativo
+        // Se regresa como arreglo asociativo 
         $filas = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($filas as $fila) {

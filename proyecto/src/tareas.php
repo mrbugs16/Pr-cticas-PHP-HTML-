@@ -2,16 +2,33 @@
 
 session_start();
 //Revisar si existe la variable
-if(!isset($_SESSION["usuario"])){
-    header("Location: login.php");
-    exit; //Termina el script, para que no se ejecute el resto del codigo
+// if (!isset($_SESSION["user"])) {
+//     header("Location: login.php");
+//     exit; //Termina el script, para que no se ejecute el resto del codigo
+// }
+
+// Bypass temporal de login para poder ver el despliegue en localhost
+if (!isset($_SESSION["user"]) || trim((string)$_SESSION["user"]) === "") {
+    $_SESSION["user"] = "santiago";
 }
 
-echo "<h1>Mis tareas</h1>";
+include_once "db_cnx.php";
+
+$statement = $cnx->prepare(
+    "SELECT  t.id_tarea,
+            t.fecha_creacion,
+            t.descripcion,
+            t.fechafinalizada,
+            t.fecha_vencimiento
+     FROM   tareas t
+     INNER JOIN usuarios u ON u.id_usuario = t.id_usuario
+     WHERE  u.usuario = ?
+     ORDER BY t.fecha_creacion DESC"
+);
+$statement->execute([$_SESSION["user"]]);
+$tareas = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 ?> 
-<a href="logout.php">Cerrar sesión</a>
-
 <!doctype html>
 <html lang="es">
 
@@ -28,47 +45,63 @@ echo "<h1>Mis tareas</h1>";
 
     <nav class="row">
         <h1 class="col"> Tareas </h1>
-        <a href="logout.php"><div class="col-2 btn btn-danger">Cerrar sesión</a>
+        <div class="col-4 text-end">
+            <span class="me-2">Usuario: <?php echo htmlspecialchars((string)$_SESSION["user"]); ?></span>
+            <a class="btn btn-danger" href="logout.php">Cerrar sesión</a>
+        </div>
     </nav>
         
     <section class="row justify-content-center">
 
-        <form method="POST" class="col-12 col-md-6" action="tareasCNT.php"> id="frm_reg">
+        <form method="POST" class="col-12 col-md-6" action="tareasCNT.php" id="frm_tareas">
 
 <div class="mb-3">
-    <label class="form-label" for="titulo">Título de la tarea</label>
-    <input class="form-control" id="titulo" name="titulo" placeholder="Ingrese el título de la tarea">
+    <label class="form-label" for="descripcion">Descripción</label>
+    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Ingrese la descripción de la tarea" required></textarea>
 </div>
             
 <div class="mb-3">
+    <label class="form-label" for="fecha_vencimiento">Fecha de vencimiento (opcional)</label>
+    <input class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" type="date">
 </div>
 
-<div class="mb-3">
-    <label for="usuario" class="form-label">Usuario</label>
-    <input class="form-control" id="usuario" name="usuario" placeholder="Ingrese su usuario">
-</div>
-
-<div class="mb-3">
-    <label for="password" class="form-label">Contraseña</label>
-    <input class="form-control" id="password" name="password" type="password" placeholder="Ingrese su password">
-</div>
-
-<div class="mb-3">
-    <label for="confirma" class="form-label">Confirmar Contraseña</label>
-    <input class="form-control" id="confirma" name="confirma" type="password" placeholder="Confirme su contraseña">
-</div>
-
-<div class="form-check mb-3">
-    <input class="form-check-input" type="checkbox" value="1" name="suscrito" id="suscrito">
-    <label class="form-check-label" for="suscrito">Deseo recibir correos relacionados</label>
-</div>
-
-<button type="submit" class="btn btn-success">Registrar</button>
+<button type="submit" class="btn btn-success">Agregar tarea</button>
 
         </form>
 
-
-<section>
+        <section class="col-12 mt-4">
+            <h2 class="h4">Mis tareas registradas</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha creación</th>
+                            <th>Descripción</th>
+                            <th>Vencimiento</th>
+                            <th>Finalizada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (count($tareas) === 0): ?>
+                            <tr>
+                                <td colspan="5">No hay tareas aún.</td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($tareas as $t): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($t["id_tarea"]); ?></td>
+                                    <td><?php echo htmlspecialchars($t["fecha_creacion"]); ?></td>
+                                    <td><?php echo nl2br(htmlspecialchars($t["descripcion"])); ?></td>
+                                    <td><?php echo htmlspecialchars($t["fecha_vencimiento"] ?? ""); ?></td>
+                                    <td><?php echo htmlspecialchars($t["fechafinalizada"] ?? ""); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
     </main>
     

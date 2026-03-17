@@ -58,7 +58,7 @@ services:
       MYSQL_USER: ougalde
       MYSQL_PASSWORD: 37863
     volumes:
-      - ./db:/root
+      - ./db/tareas_db.sql:/docker-entrypoint-initdb.d/01_tareas_db.sql:ro
       - dbdataP26:/var/lib/mysql
     ports:
       - "3306:3306"

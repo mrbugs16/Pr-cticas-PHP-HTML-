@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $host    = 'lamp_db';
 $db      = 'arqweb';
 $user    = 'ougalde';
@@ -18,4 +18,3 @@ try {
 } catch (\PDOException $e) {
     die("Error de conexion: " . $e->getMessage());
 }
-?>

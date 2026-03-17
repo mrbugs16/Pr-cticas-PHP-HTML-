@@ -30,8 +30,8 @@ ALTER TABLE tareas
 
 -- 5 usuarios de prueba (contraseñas hasheadas con password_hash + PASSWORD_BCRYPT)
 INSERT INTO usuarios (nombre, email, usuario, password, suscripcion) VALUES
-('Santiago Tapia',   'santiago@mail.com',  'santiago',  '$2y$10$abcdefghijk1234567890uQHJklMNOpqRSTUVWXYZabcdefghij', 1),
-('Ana García',       'ana@mail.com',       'ana_garcia', '$2y$10$abcdefghijk1234567890uQHJklMNOpqRSTUVWXYZabcdefghij', 0),
-('Carlos López',     'carlos@mail.com',    'clopez',     '$2y$10$abcdefghijk1234567890uQHJklMNOpqRSTUVWXYZabcdefghij', 1),
-('María Fernández',  'maria@mail.com',     'mfernandez', '$2y$10$abcdefghijk1234567890uQHJklMNOpqRSTUVWXYZabcdefghij', 0),
-('Luis Martínez',    'luis@mail.com',      'lmartinez',  '$2y$10$abcdefghijk1234567890uQHJklMNOpqRSTUVWXYZabcdefghij', 1);
+('Santiago Tapia',   'santiago@mail.com',  'santiago',   '$2b$12$KIXIDzJ2Rf2zXSpwURZrYe0djyyu3E4yFczVqTx3FWSMsvjrdIhJy', 1),
+('Ana García',       'ana@mail.com',       'ana_garcia', '$2b$12$KIXIDzJ2Rf2zXSpwURZrYe0djyyu3E4yFczVqTx3FWSMsvjrdIhJy', 0),
+('Carlos López',     'carlos@mail.com',    'clopez',     '$2b$12$KIXIDzJ2Rf2zXSpwURZrYe0djyyu3E4yFczVqTx3FWSMsvjrdIhJy', 1),
+('María Fernández',  'maria@mail.com',     'mfernandez', '$2b$12$KIXIDzJ2Rf2zXSpwURZrYe0djyyu3E4yFczVqTx3FWSMsvjrdIhJy', 0),
+('Luis Martínez',    'luis@mail.com',      'lmartinez',  '$2b$12$KIXIDzJ2Rf2zXSpwURZrYe0djyyu3E4yFczVqTx3FWSMsvjrdIhJy', 1);

@@ -1,13 +1,7 @@
 <?php
 
 session_start();
-//Revisar si existe la variable
-// if (!isset($_SESSION["user"])) {
-//     header("Location: login.php");
-//     exit; //Termina el script, para que no se ejecute el resto del codigo
-// }
 
-// Bypass temporal de login para poder ver el despliegue en localhost
 if (!isset($_SESSION["user"]) || trim((string)$_SESSION["user"]) === "") {
     $_SESSION["user"] = "santiago";
 }
@@ -18,7 +12,7 @@ $statement = $cnx->prepare(
     "SELECT  t.id_tarea,
             t.fecha_creacion,
             t.descripcion,
-            t.fechafinalizada,
+            t.fechafinalizada, #date_format(t.fecha_vencimiento, '%d-%m-%Y %k:%i), as t.fechavencimiento
             t.fecha_vencimiento
      FROM   tareas t
      INNER JOIN usuarios u ON u.id_usuario = t.id_usuario
@@ -27,6 +21,34 @@ $statement = $cnx->prepare(
 );
 $statement->execute([$_SESSION["user"]]);
 $tareas = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+//Codigo para insertar/editar
+$tarea = [
+    "id_tarea" => 0,
+    "descripcion" => " ",
+    "fecha_vencimiento" => " ",
+    "fecha_finalizada" => " ",
+];
+if(isset($_GET["id_tarea"]) && is_numeric($_GET["id_tarea"])){
+    $statement = $cnx->prepare("select id_tarea,
+                                        description,
+                                        fecha_vencimiento,
+                                        fecha_finalizada
+                                        from tareas
+                                        where id_usuario = ?
+                                        and id_tarea = ?");
+
+                                        $statement->execute([$_SESSION["id_usuario"],
+                                                             $_GET["id_tarea"]
+                                                            ]);
+
+                                                            $tareaDB = $statement->fetch();
+                                                            if(!$tareaDB){
+                                                                $tarea = $tareaDB;
+                                                            } else {
+                                                                $_SESSION["errmsg"] = "La tarea no fue encontrada";
+                                                            }
+}
 
 ?> 
 <!doctype html>
@@ -54,15 +76,22 @@ $tareas = $statement->fetchAll(PDO::FETCH_ASSOC);
     <section class="row justify-content-center">
 
         <form method="POST" class="col-12 col-md-6" action="tareasCNT.php" id="frm_tareas">
+            <input type="hidden" name="id_tarea" value="0">
+
 
 <div class="mb-3">
     <label class="form-label" for="descripcion">Descripción</label>
-    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Ingrese la descripción de la tarea" required></textarea>
+    <textarea class="form-control" id="descripcion" name="descripcion" rows="3"><?= $tarea["descripcion"] ?> placeholder="Ingrese la descripción de la tarea" required></textarea>
 </div>
             
 <div class="mb-3">
-    <label class="form-label" for="fecha_vencimiento">Fecha de vencimiento (opcional)</label>
-    <input class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" type="date">
+    <label class="form-label" for="fecha_vencimiento">Fecha de vencimiento</label>
+    <input class="form-control" id="fecha_vencimiento" name="fecha_vencimiento" valuetype="date">
+</div>
+
+<div class="mb-3">
+    <label class="form-label" for="fecha_finalizada">Fecha finalizada</label>
+    <input class="form-control" id="fecha_finalizada" name="fecha_finalizada" valuetype="date">
 </div>
 
 <button type="submit" class="btn btn-success">Agregar tarea</button>
@@ -80,6 +109,7 @@ $tareas = $statement->fetchAll(PDO::FETCH_ASSOC);
                             <th>Descripción</th>
                             <th>Vencimiento</th>
                             <th>Finalizada</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +125,10 @@ $tareas = $statement->fetchAll(PDO::FETCH_ASSOC);
                                     <td><?php echo nl2br(htmlspecialchars($t["descripcion"])); ?></td>
                                     <td><?php echo htmlspecialchars($t["fecha_vencimiento"] ?? ""); ?></td>
                                     <td><?php echo htmlspecialchars($t["fechafinalizada"] ?? ""); ?></td>
+                                    <td>    
+                                        <a href="edicion.php?id=?= $tarea["id_tarea"] ?>"class=btn btn-primary btn-sm">Editar</a>
+                                        <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
@@ -111,3 +145,5 @@ $tareas = $statement->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+
+##AGREGAR TAREAS.PHP

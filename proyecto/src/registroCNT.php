@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Verificar que el formulario fue enviado por POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: registro.php');
     exit();
 }
 
-// Validación de datos
 if (!isset($_POST['nombre']) || !preg_match(pattern: "/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+)$/",
                                  subject: $_POST['nombre'])){
                             echo "El nombre no es valido. Solo se permiten letras y espacios.";
@@ -18,13 +16,6 @@ if (!isset($_POST["correo"]) || !filter_var(value: $_POST["correo"], filter: FIL
     echo "El correo no es válido.";
     exit();
 }
-
-//validacion de contraseña, poner por lo menos 8 caracteres, una mayuscula, una minuscula, un numero y un caracter especial
-
-
-
-
-
 
 $nombre     = trim($_POST['nombre']   ?? '');
 $email      = trim($_POST['email']    ?? '');
@@ -42,44 +33,39 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     die();
 }
 
-// Conexión a la base de datos utilizando PDO
 try {
     $cnx = new PDO(
-        dsn: "mysql:host=lamp_db;dbname=arqweb;charset=utf8mb4",  // ✅ separadores con ";"
+        dsn: "mysql:host=lamp_db;dbname=arqweb;charset=utf8mb4", 
         username: "ougalde",
-        password: "37863"  // ✅ contraseña corregida
+        password: "37863"  
     );
     $cnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Hash seguro de la contraseña
+    
     $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
-    // Guardar los datos en la base de datos
-    $statement = $cnx->prepare(  // ✅ $ agregado
+    $statement = $cnx->prepare(  
         query: "INSERT INTO usuarios (nombre, email, usuario, password, suscripcion)
-                VALUES (?, ?, ?, ?, ?)"  // ✅ sin id_usuario (AUTO_INCREMENT), campo usuario agregado
+                VALUES (?, ?, ?, ?, ?)" 
     );
 
     $parametros = [
         $nombre,
         $email,
-        $usuario,     // ✅ campo agregado
+        $usuario,    
         $passwordHash,
         $suscripcion
     ];
 
     $statement->execute($parametros);
-
-    // Guardar datos del usuario en sesión
     $_SESSION['id_usuario'] = $cnx->lastInsertId();
     $_SESSION['nombre']     = $nombre;
     $_SESSION['usuario']    = $usuario;
 
-    // Redirigir a página de bienvenida ✅
     header('Location: pruebaSesiones.php');
     exit();
 
 } catch (Exception $e) {
     echo "Error al procesar el registro: " . $e->getMessage();
-    die();  // ✅ die() agregado
+    die();  
 }

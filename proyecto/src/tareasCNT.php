@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-// Bypass temporal de login para poder probar inserción desde localhost
 if (!isset($_SESSION["user"]) || trim((string)$_SESSION["user"]) === "") {
     $_SESSION["user"] = "santiago";
 }
@@ -13,6 +12,10 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 include_once "db_cnx.php";
 
+if(!isset($_POST["id_tarea"]))||
+preg_match("/^[0-9]+$/",$_POST["id_tarea"])) {
+    $err_msg .="Tarea Invalida";
+
 $descripcion = trim($_POST["descripcion"] ?? "");
 $fecha_vencimiento = trim($_POST["fecha_vencimiento"] ?? "");
 
@@ -21,7 +24,6 @@ if ($descripcion === "") {
     exit();
 }
 
-// Validar fecha_vencimiento si viene (input type=date)
 $fechaVencSql = null;
 if ($fecha_vencimiento !== "") {
     $dt = DateTime::createFromFormat("Y-m-d", $fecha_vencimiento);
@@ -33,7 +35,6 @@ if ($fecha_vencimiento !== "") {
 }
 
 try {
-    // Buscar id_usuario a partir del usuario en sesión
     $stmtUser = $cnx->prepare("SELECT id_usuario FROM usuarios WHERE usuario = ?");
     $stmtUser->execute([$_SESSION["user"]]);
     $rowUser = $stmtUser->fetch(PDO::FETCH_ASSOC);
@@ -47,6 +48,16 @@ try {
         "INSERT INTO tareas (id_usuario, descripcion, fecha_vencimiento)
          VALUES (?, ?, ?)"
     );
+
+    if($_POST["id_tarea"] > 0{
+        $query = "update tareas set
+                  descripcion = ?,
+                  fecha_vencimiento = ?
+                  fecha_finalizada = ?
+                  where id_usuario = ?
+                  and id_tarea = ?";
+    }
+
     $stmt->execute([
         $rowUser["id_usuario"],
         $descripcion,

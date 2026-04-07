@@ -7,6 +7,21 @@
 </head>
 <body>
     <h1>JavaScritp Intro</h1> 
+
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Email</th>
+        </tr>
+        <tr>
+            <td>Juan</td>
+            <td>20</td>
+            <td>juan@gmail.com</td>
+        </tr>
+
+        <tbody> id="tbl_datos"></tbody>
+    </table>
     <script src="js/home.js"></script>
 </body>
 </html>

@@ -14,14 +14,13 @@
             <th>Edad</th>
             <th>Email</th>
         </tr>
-        <tr>
-            <td>Juan</td>
-            <td>20</td>
-            <td>juan@gmail.com</td>
-        </tr>
+        <thead>
 
-        <tbody> id="tbl_datos"></tbody>
+        </thead>
+        <tbody> id="tbl_datos">
+
+        </tbody>
     </table>
     <script src="js/home.js"></script>
-</body>
+    </body>
 </html>

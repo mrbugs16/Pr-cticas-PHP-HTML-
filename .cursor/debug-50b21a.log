@@ -1,0 +1,4 @@
+{"sessionId":"50b21a","runId":"pre-fix","hypothesisId":"H1","location":"home.php:inline-script","message":"home.php loaded","data":{"path":"/JavaScript_Intro/home.php","readyState":"loading"},"timestamp":1776140128849}
+{"sessionId":"50b21a","runId":"pre-fix","hypothesisId":"H3","location":"home.php:dom-content-loaded","message":"home table body presence","data":{"tbl_datos_exists":true},"timestamp":1776140128866}
+{"sessionId":"50b21a","runId":"pre-fix","hypothesisId":"H1","location":"contactos.php:inline-script","message":"contactos.php loaded","data":{"path":"/JavaScript_Intro/contactos.php","readyState":"loading"},"timestamp":1776140138357}
+{"sessionId":"50b21a","runId":"pre-fix","hypothesisId":"H5","location":"contactos.php:dom-content-loaded","message":"contact table and button presence","data":{"tbl_data_exists":true,"load_exists":true},"timestamp":1776140138376}

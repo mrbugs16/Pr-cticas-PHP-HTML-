@@ -36,6 +36,10 @@
         <button id="load" type="button">Mostrar Contactos</button>
     </div>
 
+    <div style="margin:15px 0;">
+        <button id="btn_eliminados" type="button">Ver eliminados</button>
+    </div>
+
     <!-- tbody vacio: las filas se generan en JS con innerHTML (mostrarContactos) -->
     <table border="1">
         <thead>
@@ -50,7 +54,18 @@
         <tbody id="tbl_data"></tbody>
     </table>
 
+    <!-- tabla de IDs eliminados -->
+    <table border="1" style="margin-top: 15px;">
+        <thead>
+            <tr>
+                <th>ID Eliminado</th>
+            </tr>
+        </thead>
+        <tbody id="tbl_eliminados"></tbody>
+    </table>
+
     <!-- Logica del formulario, tabla y botones en js/contacto.js -->
     <script src="js/contacto.js"></script>
+    <script src="js/contactosObj.js"></script>
 </body>
 </html>
